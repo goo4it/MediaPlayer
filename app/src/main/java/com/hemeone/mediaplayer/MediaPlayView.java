@@ -117,6 +117,7 @@ public class MediaPlayView extends View {
                 disc_x = getWidth() - 10 * needleScale;
                 isNext = false;
                 isNextIn = true;
+                discRotracre = 0;
             }
         }
         if (isNextIn) {
@@ -137,6 +138,7 @@ public class MediaPlayView extends View {
                 disc_x = -(play_disc.getWidth()) + 10 * needleScale;
                 isPrev = false;
                 isPrevIn = true;
+                discRotracre = 0;
             }
         }
         if (isPrevIn) {
