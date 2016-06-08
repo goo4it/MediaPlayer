@@ -9,6 +9,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.RadialGradient;
+import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
@@ -50,7 +52,7 @@ public class MediaPlayView extends View {
         isInited = true;
         play_needle = ((BitmapDrawable) getResources().getDrawable(R.drawable.play_needle)).getBitmap();
         play_disc = ((BitmapDrawable) getResources().getDrawable(R.drawable.play_disc)).getBitmap();
-        play_avater = ((BitmapDrawable) getResources().getDrawable(R.drawable.play_avater)).getBitmap();
+        play_avater = ((BitmapDrawable) getResources().getDrawable(R.drawable.placeholder_disk_play_song)).getBitmap();
         needleScale = play_needle.getWidth() / 276f;
         disc_x = getWidth() / 2f - play_disc.getWidth() / 2f;
         disc_y = (365 - 170) * needleScale;
@@ -102,6 +104,14 @@ public class MediaPlayView extends View {
         matrix.postTranslate(needle_x, needle_y);
         matrix.postRotate(needleRotare, needle_x + 49 * needleScale, needle_y + 49 * needleScale);
         canvas.drawBitmap(play_needle, matrix, mBitPaint);
+
+        Paint linePaint = new Paint();
+        linePaint.setAntiAlias(true);
+        Shader shader = new RadialGradient(getWidth() / 2, 1, getWidth() / 2,
+                new int[]{0xFFFFFFFF, 0x19FFFFFF}, null, Shader.TileMode.REPEAT);
+        linePaint.setShader(shader);
+        linePaint.setStrokeWidth(0.5f);
+        canvas.drawLine(0, 0, getWidth(), 0, linePaint);
         if (isPlay && needleRotare < needleRotareStart) {
             needleRotare += 1;
         } else if (!isPlay && needleRotare > needleRotareEnd) {
@@ -112,7 +122,7 @@ public class MediaPlayView extends View {
             if (discRotracre >= 360f) discRotracre = 0;
         }
         if (isNext) {
-            disc_x -= 20;
+            disc_x -= 40;
             if (disc_x <= -(play_disc.getWidth()) + 10 * needleScale) {
                 disc_x = getWidth() - 10 * needleScale;
                 isNext = false;
@@ -121,7 +131,7 @@ public class MediaPlayView extends View {
             }
         }
         if (isNextIn) {
-            disc_x -= 20;
+            disc_x -= 40;
             if (disc_x <= getWidth() / 2f - play_disc.getWidth() / 2f) {
                 disc_x = getWidth() / 2f - play_disc.getWidth() / 2f;
                 isNextIn = false;
@@ -133,7 +143,7 @@ public class MediaPlayView extends View {
         }
 
         if (isPrev) {
-            disc_x += 20;
+            disc_x += 40;
             if (disc_x >= getWidth()) {
                 disc_x = -(play_disc.getWidth()) + 10 * needleScale;
                 isPrev = false;
@@ -142,7 +152,7 @@ public class MediaPlayView extends View {
             }
         }
         if (isPrevIn) {
-            disc_x += 20;
+            disc_x += 40;
             if (disc_x >= getWidth() / 2f - play_disc.getWidth() / 2f) {
                 disc_x = getWidth() / 2f - play_disc.getWidth() / 2f;
                 isPrevIn = false;
