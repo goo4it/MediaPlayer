@@ -15,6 +15,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -88,6 +89,7 @@ public class MediaPlayView extends View {
         canvas.drawCircle(bd_x, bd_y, play_disc.getWidth() / 2, paint);
         paint.setColor(Color.parseColor("#33000000"));
         canvas.drawCircle(bd_x, bd_y, play_disc.getWidth() / 2 - (10 * needleScale), paint);
+
         Matrix avaterMatrix = new Matrix();
         avaterMatrix.postTranslate(
                 disc_x + play_disc.getWidth() / 2 - (needleScale * 550f) / 2,
@@ -99,6 +101,20 @@ public class MediaPlayView extends View {
         discMatrix.postTranslate(disc_x, disc_y);
         discMatrix.postRotate(discRotracre, disc_x + play_disc.getWidth() / 2, disc_y + play_disc.getHeight() / 2);
         canvas.drawBitmap(play_disc, discMatrix, mBitPaint);
+        if (isPrev || isPrevIn) {
+            // prev
+            float start = disc_x - getWidth() / 2f - play_disc.getWidth() / 2;
+            canvas.drawBitmap(play_avater, start + play_disc.getWidth() / 2f - (needleScale * 550f) / 2,
+                    disc_y + play_disc.getHeight() / 2 - (needleScale * 550f) / 2, mBitPaint);
+            canvas.drawBitmap(play_disc, start, disc_y, mBitPaint);
+        } else if (isNextIn || isNext) {
+            // next
+            float start1 = getWidth() / 2f + play_disc.getWidth() / 2f + disc_x;
+            canvas.drawBitmap(play_avater, start1 + play_disc.getWidth() / 2f - (needleScale * 550f) / 2,
+                    disc_y + play_disc.getHeight() / 2 - (needleScale * 550f) / 2, mBitPaint);
+            canvas.drawBitmap(play_disc, start1, disc_y, mBitPaint);
+
+        }
 
         Matrix matrix = new Matrix();
         matrix.postTranslate(needle_x, needle_y);
@@ -112,57 +128,59 @@ public class MediaPlayView extends View {
         linePaint.setShader(shader);
         linePaint.setStrokeWidth(0.5f);
         canvas.drawLine(0, 0, getWidth(), 0, linePaint);
-        if (isPlay && needleRotare < needleRotareStart) {
-            needleRotare += 1;
-        } else if (!isPlay && needleRotare > needleRotareEnd) {
-            needleRotare -= 1;
-        }
+
         if (isPlay) {
             discRotracre += 0.2f;
             if (discRotracre >= 360f) discRotracre = 0;
-        }
-        if (isNext) {
-            disc_x -= 40;
-            if (disc_x <= -(play_disc.getWidth()) + 10 * needleScale) {
-                disc_x = getWidth() - 10 * needleScale;
-                isNext = false;
-                isNextIn = true;
-                discRotracre = 0;
+            if (needleRotare < needleRotareStart) needleRotare += 1;
+            invalidate();
+        } else if (isNextIn || isNext || isPrev || isPrevIn) {
+            if (needleRotare > needleRotareEnd) needleRotare -= 1;
+            if (isNext) {
+                disc_x -= 40;
+                if (disc_x <= -(play_disc.getWidth()) + 10 * needleScale) {
+//                    disc_x = getWidth() - 10 * needleScale;
+                    isNext = false;
+                    isNextIn = true;
+                    discRotracre = 0;
+                }
             }
-        }
-        if (isNextIn) {
-            disc_x -= 40;
-            if (disc_x <= getWidth() / 2f - play_disc.getWidth() / 2f) {
-                disc_x = getWidth() / 2f - play_disc.getWidth() / 2f;
-                isNextIn = false;
-                isPlay = true;
-                reflashUIHandler();
-                invalidate();
-                return;
+            if (isNextIn) {
+                disc_x -= 40;
+                if (disc_x <= getWidth() / 2f - play_disc.getWidth() / 2f) {
+                    disc_x = getWidth() / 2f - play_disc.getWidth() / 2f;
+                    isNextIn = false;
+                    isPlay = true;
+                    reflashUIHandler();
+                    invalidate();
+                    return;
+                }
             }
-        }
-
-        if (isPrev) {
-            disc_x += 40;
-            if (disc_x >= getWidth()) {
-                disc_x = -(play_disc.getWidth()) + 10 * needleScale;
-                isPrev = false;
-                isPrevIn = true;
-                discRotracre = 0;
+            if (isPrev) {
+                disc_x += 40;
+                if (disc_x >= getWidth()) {
+//                    disc_x = -(play_disc.getWidth()) + 10 * needleScale;
+                    isPrev = false;
+                    isPrevIn = true;
+                    discRotracre = 0;
+                }
             }
-        }
-        if (isPrevIn) {
-            disc_x += 40;
-            if (disc_x >= getWidth() / 2f - play_disc.getWidth() / 2f) {
-                disc_x = getWidth() / 2f - play_disc.getWidth() / 2f;
-                isPrevIn = false;
-                isPlay = true;
-                reflashUIHandler();
-                invalidate();
-                return;
+            if (isPrevIn) {
+                disc_x += 40;
+                if (disc_x >= getWidth() / 2f - play_disc.getWidth() / 2f) {
+                    disc_x = getWidth() / 2f - play_disc.getWidth() / 2f;
+                    isPrevIn = false;
+                    isPlay = true;
+                    reflashUIHandler();
+                    invalidate();
+                    return;
+                }
             }
+            invalidate();
+        } else if (needleRotare > needleRotareEnd) {
+            needleRotare -= 1;
+            invalidate();
         }
-        invalidate();
     }
 
     /**
