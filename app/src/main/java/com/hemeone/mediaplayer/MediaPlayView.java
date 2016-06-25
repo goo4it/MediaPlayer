@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -56,8 +57,8 @@ public class MediaPlayView extends View {
         play_avater = ((BitmapDrawable) getResources().getDrawable(R.drawable.placeholder_disk_play_song)).getBitmap();
         needleScale = play_needle.getWidth() / 276f;
         disc_x = getWidth() / 2f - play_disc.getWidth() / 2f;
-        disc_y = (365 - 170) * needleScale;
-        needle_x = getWidth() / 2f - 49 * needleScale;
+        disc_y = (365 - 210) * needleScale;
+        needle_x = getWidth() / 2f;
         needle_y = -49 * needleScale;
         bd_x = disc_x + play_disc.getWidth() / 2;
         bd_y = disc_y + play_disc.getHeight() / 2;
@@ -92,8 +93,8 @@ public class MediaPlayView extends View {
 
         Matrix avaterMatrix = new Matrix();
         avaterMatrix.postTranslate(
-                disc_x + play_disc.getWidth() / 2 - (needleScale * 550f) / 2,
-                disc_y + play_disc.getHeight() / 2 - (needleScale * 550f) / 2);
+                disc_x + play_disc.getWidth() / 2 - play_avater.getWidth() / 2,
+                disc_y + play_disc.getHeight() / 2 - play_avater.getWidth() / 2);
         avaterMatrix.postRotate(discRotracre, disc_x + play_disc.getWidth() / 2, disc_y + play_disc.getHeight() / 2);
         canvas.drawBitmap(play_avater, avaterMatrix, mBitPaint);
 
@@ -104,14 +105,14 @@ public class MediaPlayView extends View {
         if (isPrev || isPrevIn) {
             // prev
             float start = disc_x - getWidth() / 2f - play_disc.getWidth() / 2;
-            canvas.drawBitmap(play_avater, start + play_disc.getWidth() / 2f - (needleScale * 550f) / 2,
-                    disc_y + play_disc.getHeight() / 2 - (needleScale * 550f) / 2, mBitPaint);
+            canvas.drawBitmap(play_avater, start + play_disc.getWidth() / 2f - play_avater.getWidth() / 2,
+                    disc_y + play_disc.getHeight() / 2 - play_avater.getWidth() / 2, mBitPaint);
             canvas.drawBitmap(play_disc, start, disc_y, mBitPaint);
         } else if (isNextIn || isNext) {
             // next
             float start1 = getWidth() / 2f + play_disc.getWidth() / 2f + disc_x;
-            canvas.drawBitmap(play_avater, start1 + play_disc.getWidth() / 2f - (needleScale * 550f) / 2,
-                    disc_y + play_disc.getHeight() / 2 - (needleScale * 550f) / 2, mBitPaint);
+            canvas.drawBitmap(play_avater, start1 + play_disc.getWidth() / 2f - play_avater.getWidth() / 2,
+                    disc_y + play_disc.getHeight() / 2 - play_avater.getWidth() / 2, mBitPaint);
             canvas.drawBitmap(play_disc, start1, disc_y, mBitPaint);
 
         }
@@ -196,28 +197,28 @@ public class MediaPlayView extends View {
         int widthOrg = bitmap.getWidth();
         int heightOrg = bitmap.getHeight();
 
-        if (widthOrg > edgeLength && heightOrg > edgeLength) {
-            //压缩到一个最小长度是edgeLength的bitmap
-            int longerEdge = (int) (edgeLength * Math.max(widthOrg, heightOrg) / Math.min(widthOrg, heightOrg));
-            int scaledWidth = widthOrg > heightOrg ? longerEdge : edgeLength;
-            int scaledHeight = widthOrg > heightOrg ? edgeLength : longerEdge;
-            Bitmap scaledBitmap;
-            try {
-                scaledBitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true);
-            } catch (Exception e) {
-                return null;
-            }
-
-            //从图中截取正中间的正方形部分。
-            int xTopLeft = (scaledWidth - edgeLength) / 2;
-            int yTopLeft = (scaledHeight - edgeLength) / 2;
-            try {
-                result = Bitmap.createBitmap(scaledBitmap, xTopLeft, yTopLeft, edgeLength, edgeLength);
-                scaledBitmap.recycle();
-            } catch (Exception e) {
-                return null;
-            }
+//        if (widthOrg > edgeLength && heightOrg > edgeLength) {
+        //压缩到一个最小长度是edgeLength的bitmap
+        int longerEdge = (int) (edgeLength * Math.max(widthOrg, heightOrg) / Math.min(widthOrg, heightOrg));
+        int scaledWidth = widthOrg > heightOrg ? longerEdge : edgeLength;
+        int scaledHeight = widthOrg > heightOrg ? edgeLength : longerEdge;
+        Bitmap scaledBitmap;
+        try {
+            scaledBitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true);
+        } catch (Exception e) {
+            return null;
         }
+
+        //从图中截取正中间的正方形部分。
+        int xTopLeft = (scaledWidth - edgeLength) / 2;
+        int yTopLeft = (scaledHeight - edgeLength) / 2;
+        try {
+            result = Bitmap.createBitmap(scaledBitmap, xTopLeft, yTopLeft, edgeLength, edgeLength);
+            scaledBitmap.recycle();
+        } catch (Exception e) {
+            return null;
+        }
+//        }
         return result;
     }
 
@@ -257,6 +258,7 @@ public class MediaPlayView extends View {
 
     public void play() {
         this.isPlay = true;
+        uiHandler.sendEmptyMessage(0x113);
         reflashUIHandler();
         invalidate();
     }
@@ -292,4 +294,5 @@ public class MediaPlayView extends View {
     public void setUiHandler(Handler uiHandler) {
         this.uiHandler = uiHandler;
     }
+
 }

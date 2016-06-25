@@ -20,10 +20,12 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+
         <com.hemeone.mediaplayer.MediaPlayView
             android:id="@+id/mpv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -41,28 +43,28 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
+
                 <ImageView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/play_icn_love" />
 
                 <ImageView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/play_icn_dld" />
 
                 <ImageView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/play_icn_cmt" />
 
                 <ImageView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:src="@drawable/play_icn_more" />
 
                 <View
@@ -83,6 +85,7 @@
         android:paddingTop="5dp">
 
         <TextView
+            android:id="@+id/tv_play_time"
             android:layout_width="40dp"
             android:layout_height="20dp"
             android:gravity="center"
@@ -90,10 +93,13 @@
             android:textColor="@android:color/white" />
 
         <SeekBar
+            android:id="@+id/seekBar"
             style="@style/Widget.SeekBar.Normal"
             android:layout_width="0dp"
             android:layout_height="20dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:max="1000" />
 
         <TextView
             android:layout_width="40dp"
@@ -107,35 +113,47 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+
+        <ImageView
+            android:id="@+id/btn_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:orientation="horizontal">
+            android:clickable="true"
+            android:src="@drawable/play_btn_play_selector" />
 
-            <ImageView
-                android:id="@+id/btn_prev"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:clickable="true"
-                android:src="@drawable/play_btn_prev_selector" />
+        <ImageView
+            android:id="@+id/btn_prev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/btn_play"
+            android:clickable="true"
+            android:src="@drawable/play_btn_prev_selector" />
 
-            <ImageView
-                android:id="@+id/btn_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:clickable="true"
-                android:src="@drawable/play_btn_play_selector" />
+        <ImageView
+            android:id="@+id/btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/btn_play"
+            android:clickable="true"
+            android:src="@drawable/play_btn_next_selector" />
 
-            <ImageView
-                android:id="@+id/btn_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:clickable="true"
-                android:src="@drawable/play_btn_next_selector" />
-        </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@id/btn_prev"
+            android:src="@drawable/play_icn_loop" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/btn_next"
+            android:src="@drawable/play_icn_src" />
     </RelativeLayout>
 </LinearLayout>
